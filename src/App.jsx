@@ -7,6 +7,12 @@ const destinations = [
   { name: 'Bali', subtitle: 'Relax & unwind', image: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=900&q=80' }
 ]
 
+const deals = [
+  { title: 'Flash deals', text: 'Save on stays over 4 nights', badge: 'Up to 40% off' },
+  { title: 'Weekend getaways', text: 'Perfect for short city breaks', badge: 'from $90' },
+  { title: 'Family-friendly', text: 'Spacious rooms and pools', badge: 'Top-rated' }
+]
+
 const hotels = [
   {
     id: 1,
@@ -108,10 +114,10 @@ const perks = [
 ]
 
 const activities = [
-  { title: 'Beach escapes', tag: '4 stays' },
-  { title: 'Mountain cabins', tag: '7 stays' },
-  { title: 'Foodie cities', tag: '12 stays' },
-  { title: 'Family resorts', tag: '8 stays' }
+  { title: 'Beach escapes', tag: '4 stays', color: 'sand' },
+  { title: 'Mountain cabins', tag: '7 stays', color: 'forest' },
+  { title: 'Foodie cities', tag: '12 stays', color: 'city' },
+  { title: 'Family resorts', tag: '8 stays', color: 'sunset' }
 ]
 
 const sortOptions = ['Recommended', 'Price: low to high', 'Price: high to low', 'Guest rating']
@@ -209,6 +215,31 @@ function App() {
               <button className="chip">Family</button>
               <button className="chip">Luxury</button>
             </div>
+          </div>
+
+          <div className="promo-row">
+            {deals.map((deal) => (
+              <div key={deal.title} className="promo-tile">
+                <span>{deal.badge}</span>
+                <strong>{deal.title}</strong>
+                <small>{deal.text}</small>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="stats-row">
+          <div className="stat-box">
+            <strong>2.4M+</strong>
+            <span>happy travelers</span>
+          </div>
+          <div className="stat-box">
+            <strong>4.8/5</strong>
+            <span>average guest score</span>
+          </div>
+          <div className="stat-box">
+            <strong>1,200+</strong>
+            <span>new stays added daily</span>
           </div>
         </section>
 
@@ -337,7 +368,7 @@ function App() {
           <div className="activities-grid">
             {activities.map((item) => (
               <div key={item.title} className="activity-card">
-                <div className="activity-visual" />
+                <div className={`activity-visual ${item.color}`} />
                 <div className="activity-copy">
                   <h3>{item.title}</h3>
                   <span>{item.tag}</span>
