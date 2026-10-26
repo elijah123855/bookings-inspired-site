@@ -27,7 +27,11 @@ const hotels = [
     breakfast: true,
     freeCancel: true,
     type: 'Luxury',
-    description: 'Oceanfront rooms with skyline views and complimentary breakfast.'
+    description: 'Oceanfront rooms with skyline views and complimentary breakfast.',
+    amenities: ['Pool', 'Spa', 'Sea view', 'Free Wi‑Fi'],
+    nights: 3,
+    checkIn: 'May 15',
+    checkOut: 'May 18'
   },
   {
     id: 2,
@@ -42,7 +46,11 @@ const hotels = [
     breakfast: true,
     freeCancel: true,
     type: 'Boutique',
-    description: 'A charming boutique stay near the Seine with café style dining.'
+    description: 'A charming boutique stay near the Seine with café style dining.',
+    amenities: ['Terrace', 'Breakfast', 'City center', 'Air conditioning'],
+    nights: 2,
+    checkIn: 'Jun 10',
+    checkOut: 'Jun 12'
   },
   {
     id: 3,
@@ -57,7 +65,11 @@ const hotels = [
     breakfast: false,
     freeCancel: true,
     type: 'Wellness',
-    description: 'Zen-inspired hotel with a spa, rooftop lounge, and serene interiors.'
+    description: 'Zen-inspired hotel with a spa, rooftop lounge, and serene interiors.',
+    amenities: ['Rooftop', 'Gym', 'Spa', 'Tea house'],
+    nights: 4,
+    checkIn: 'Jul 05',
+    checkOut: 'Jul 09'
   },
   {
     id: 4,
@@ -72,7 +84,11 @@ const hotels = [
     breakfast: true,
     freeCancel: false,
     type: 'Resort',
-    description: 'Private pool villas set in lush tropical gardens for a secluded stay.'
+    description: 'Private pool villas set in lush tropical gardens for a secluded stay.',
+    amenities: ['Pool', 'Garden', 'Patio', 'Private bath'],
+    nights: 5,
+    checkIn: 'Aug 12',
+    checkOut: 'Aug 17'
   },
   {
     id: 5,
@@ -87,7 +103,11 @@ const hotels = [
     breakfast: true,
     freeCancel: true,
     type: 'City stay',
-    description: 'Stylish rooms in the historic district close to tram lines and cafés.'
+    description: 'Stylish rooms in the historic district close to tram lines and cafés.',
+    amenities: ['Balcony', 'Breakfast', 'Near metro', 'Housekeeping'],
+    nights: 2,
+    checkIn: 'Sep 03',
+    checkOut: 'Sep 05'
   },
   {
     id: 6,
@@ -102,7 +122,11 @@ const hotels = [
     breakfast: false,
     freeCancel: true,
     type: 'City hotel',
-    description: 'Downtown stay with panoramic views, gym, and premium lounge access.'
+    description: 'Downtown stay with panoramic views, gym, and premium lounge access.',
+    amenities: ['Gym', 'Sky bar', 'Fast check-in', 'Parking'],
+    nights: 3,
+    checkIn: 'Oct 20',
+    checkOut: 'Oct 23'
   }
 ]
 
@@ -126,6 +150,8 @@ function App() {
   const [destination, setDestination] = useState('Dubai')
   const [activeFilter, setActiveFilter] = useState('All stays')
   const [sortBy, setSortBy] = useState('Recommended')
+  const [selectedHotel, setSelectedHotel] = useState(hotels[0])
+  const [isDetailOpen, setIsDetailOpen] = useState(false)
 
   const visibleHotels = useMemo(() => {
     let filtered = [...hotels]
@@ -151,6 +177,13 @@ function App() {
 
     return filtered
   }, [destination, activeFilter, sortBy])
+
+  const openHotelDetails = (hotel) => {
+    setSelectedHotel(hotel)
+    setIsDetailOpen(true)
+  }
+
+  const closeHotelDetails = () => setIsDetailOpen(false)
 
   return (
     <div className="page-shell">
@@ -329,7 +362,7 @@ function App() {
                       <span className="night">/night</span>
                     </div>
                     <span className="old-price">${hotel.originalPrice}</span>
-                    <button>View deal</button>
+                    <button onClick={() => openHotelDetails(hotel)}>View deal</button>
                   </div>
                 </div>
               </article>
@@ -395,6 +428,73 @@ function App() {
           <span>Terms</span>
         </div>
       </footer>
+
+      {isDetailOpen && (
+        <div className="hotel-modal-backdrop" onClick={closeHotelDetails}>
+          <div className="hotel-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="close-modal" onClick={closeHotelDetails} aria-label="Close property details">
+              ×
+            </button>
+
+            <div className="modal-gallery">
+              <img src={selectedHotel.image} alt={selectedHotel.name} className="main-gallery-image" />
+              <div className="gallery-side">
+                <img src={selectedHotel.image} alt={`${selectedHotel.name} view 2`} />
+                <img src={selectedHotel.image} alt={`${selectedHotel.name} view 3`} />
+              </div>
+            </div>
+
+            <div className="modal-content">
+              <div className="detail-copy">
+                <div className="detail-header-row">
+                  <span className="modal-tag">{selectedHotel.tag}</span>
+                  <div className="rating-box big">
+                    <span>★</span>
+                    <strong>{selectedHotel.rating}</strong>
+                  </div>
+                </div>
+
+                <h2>{selectedHotel.name}</h2>
+                <p className="location">{selectedHotel.location}</p>
+                <p className="detail-description">{selectedHotel.description}</p>
+
+                <div className="amenity-list">
+                  {selectedHotel.amenities.map((amenity) => (
+                    <span key={amenity}>{amenity}</span>
+                  ))}
+                </div>
+              </div>
+
+              <aside className="booking-panel">
+                <div className="booking-box">
+                  <div className="stay-range">
+                    <span>{selectedHotel.checkIn}</span>
+                    <span>→</span>
+                    <span>{selectedHotel.checkOut}</span>
+                  </div>
+
+                  <div className="price-summary">
+                    <div>
+                      <span className="price">${selectedHotel.price}</span>
+                      <span className="night">/night</span>
+                    </div>
+                    <span className="old-price">${selectedHotel.originalPrice}</span>
+                  </div>
+
+                  <div className="booking-breakdown">
+                    <div><span>Stay</span><strong>{selectedHotel.nights} nights</strong></div>
+                    <div><span>Taxes</span><strong>$38</strong></div>
+                    <div><span>Fee</span><strong>$12</strong></div>
+                  </div>
+
+                  <button className="reserve-btn">Reserve now</button>
+                  <small>No payment required today</small>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
